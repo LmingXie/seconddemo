@@ -9,7 +9,6 @@
 <div style="width:1000px;background: #eeeeee;position: relative;">
 
     <div style="position: absolute;width:490px;height:200px;top:0px;">
-        <input type="text" name="actid" id="actid" placeholder="活动的id" /><br/>
         <input type="text" name="skuid" id="skuid" placeholder="sku的id" /><br/>
         <input type="text" name="amount" id="amount" placeholder="sku库存数" /><br/>
         <input type="button" id="set_redis_amount"  value="添加秒杀sku" onclick="set_sku_amount()" />
@@ -20,13 +19,6 @@
 <script>
        function set_sku_amount() {
            //alert('开始设置redis库存');
-
-           if ($("#actid").val() == "") {
-               alert('actid is empty');
-               $("#actid").focus();
-               return false;
-           }
-
            if ($("#skuid").val() == "") {
                alert('skuid is empty');
                $("#skuid").focus();
@@ -40,7 +32,7 @@
            }
 
 
-           var url_param = "actid="+$("#actid").val()+"&skuid="+$("#skuid").val();
+           var url_param = "&skuid="+$("#skuid").val();
                url_param += "&amount="+$("#amount").val();
 
            $.ajax({

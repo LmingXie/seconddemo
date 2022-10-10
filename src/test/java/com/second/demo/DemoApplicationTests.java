@@ -16,15 +16,20 @@ class DemoApplicationTests {
 
     @Test
     void contextLoads() throws InterruptedException {
+        String skuId = "1";
+        int amount = 40;
+        ServerResponseUtil serverResponseUtil = secondController.skuAdd(skuId, amount);
+        System.out.println(serverResponseUtil.getMsg());
+
         ExecutorService executorService = Executors.newFixedThreadPool(20);
-        for (int i = 2; i < 112; i++) {
-            String userId = String.valueOf(i + 1);
+        for (int i = 0; i < 200; i++) {
             executorService.execute(() -> {
-                ServerResponseUtil responseUtil = secondController.skuSecond("1", userId, 1, "3", 2, 2);
+                // 取余SKU，模拟多次购买
+                int userid = (int) (Math.random() * 1000 % amount);
+                ServerResponseUtil responseUtil = secondController.skuSecond(String.valueOf(userid), 1, "1", 2);
                 System.out.println(responseUtil.getMsg());
             });
         }
-
         Thread.sleep(1000 * 60);
     }
 

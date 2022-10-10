@@ -27,9 +27,9 @@ public class SecondServiceImpl implements SecondService {
      *     amount:sku的库存数
      * */
     @Override
-    public boolean skuAdd(String actId, String skuId, int amount) {
+    public boolean skuAdd(String skuId, int amount) {
 
-        String nameAmount = "sec_" + actId + "_sku_amount_hash";
+        String nameAmount = "sec_sku_amount_hash";
         boolean isSuccAmount = redisHashUtil.setHashValue(nameAmount, skuId, amount);
 
         if (isSuccAmount) {
@@ -39,7 +39,7 @@ public class SecondServiceImpl implements SecondService {
         }
     }
 
-    /*
+    /**
      * 秒杀功能，
      * 调用second.lua脚本
      * actId:活动id
@@ -47,12 +47,11 @@ public class SecondServiceImpl implements SecondService {
      * buyNum:购买数量
      * skuId:sku的id
      * perSkuLim:每个用户购买当前sku的个数限制
-     * perActLim：每个用户购买当前活动内所有sku的总数量限制
      * 返回:
      * 秒杀的结果
-     *  * */
+     */
     @Override
-    public String skuSecond(String actId, String userId, int buyNum, String skuId, int perSkuLim, int perActLim) {
+    public String skuSecond(String userId, int buyNum, String skuId, int perSkuLim) {
 
         //时间字串，用来区分秒杀成功的订单
         int START = 100000;
@@ -66,10 +65,6 @@ public class SecondServiceImpl implements SecondService {
 
         keyList.add(skuId);
         keyList.add(String.valueOf(perSkuLim));
-
-        keyList.add(actId);
-        keyList.add(String.valueOf(perActLim));
-
         keyList.add(order_time);
 
         String result = redisLuaUtil.runLuaScript("second.lua", keyList);
